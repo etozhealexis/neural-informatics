@@ -9,8 +9,8 @@ P = x(t1);
 
 plot(t1, P, '.-'); grid;
 
-for i = 1:2
-    Pi(i) = P(3 - i);
+for i = 1:3
+    Pi(i) = P(i);
 end
 
 for i = 1:size(P, 2) - 3
@@ -25,7 +25,7 @@ end
 lr = maxlinlr(P, 'bias');
 
 % линейная сеть, вход, выход, задержки, максимальная скорость
-net = newlin([-1, 1], [-1, 1], [0 1 2], lr);
+net = newlin([-1, 1], [-1, 1], [1 2 3], lr);
 
 net.inputweights{1, 1}.initFcn = 'rands';
 net.biases{1}.initFcn = 'rands';

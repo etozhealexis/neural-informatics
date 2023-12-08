@@ -27,6 +27,7 @@ lr = maxlinlr(P, 'bias');
 % линейная сеть, вход, выход, задержки, максимальная скорость
 net = newlin([-1, 1], [-1, 1], [1 2 3], lr);
 
+% Инициализация сети случайными значениями
 net.inputweights{1, 1}.initFcn = 'rands';
 net.biases{1}.initFcn = 'rands';
 
@@ -42,7 +43,7 @@ PM = con2seq(PM);
 PM1 = con2seq(PM1);
 P = con2seq(P);
 
-% точность
+% точность + обучение
 net.trainParam.goal = 1E-6;
 net.trainParam.epochs = 600;
 net = train(net, PM, PM1, Pi);
@@ -68,26 +69,24 @@ plot(t1, P, 'b', t1, Y, 'r--'); grid;
 subplot(212);
 plot(t3, E, 'g'); grid;
 
-% t4 = 0:0.02:4.4;
-% P1 = x(t4);
-% P2 = con2seq(P1);
-% Y1 = sim(net, P2);
-% 
-% Y1 = seq2con(Y1);
-% t5 = 0:0.02:4.42;
-% X1 = x(t5);
-% 
-% E1 = X1 - Y1;
-% 
-% M3 = sqrt(mse(Y1 - X1));
-% 
-% figure
-% 
-% subplot(211);
-% plot(t4, P1, 'b', t4, Y1, 'r--'); grid;
-% 
-% subplot(212)
-% plot(t5, E1, 'g'); grid;
-% 
-% Pp = [P(199), P(200), P(201)];
+
+% Формирование набора данных для прогноза
+t4 = 0:0.02:4.4;
+P1 = x(t4);
+P2 = con2seq(P1);
+Y1 = sim(net, P2);
+
+Y1 = seq2con(Y1); Y1 = Y1{1};
+P2 = seq2con(P2); P2 = P2{1};
+E1 = Y1 - P2;
+
+M3 = sqrt(mse(Y1 - P2));
+
+figure
+
+subplot(211);
+plot(t4, P2, 'b', t4, Y1, 'r--'); grid;
+
+subplot(212)
+plot(t4, E1, 'g'); grid;
 

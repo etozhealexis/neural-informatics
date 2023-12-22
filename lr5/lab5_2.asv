@@ -46,77 +46,38 @@ X2 = [1 1 1 1 1 1  1 1  2 2;
       1 1 1 1 1 1  1 1  2 2];
 
 
+print_image(X2, map);
 print_image(X1, map);
 print_image(X4, map);
-print_image(X2, map);
 
-
-p1 = to_vector(X1); 
-p2 = to_vector(X4); 
-p3 = to_vector(X2); 
-
-IW = [p1; p2; p3];
-b1 = [n*m; n*m; n*m];
-epsilon = 1/2;
-Q = 3;
-LW = zeros([Q,Q]);
-
-
-for i = 1:Q
-    for j = 1:Q
-        LW(i,j) = -epsilon;
-        if i == j
-            LW(i,j) = 1;
-        else
-
-        end
-    end
-end
+p1 = to_vector(X2); 
+p2 = to_vector(X1); 
+p3 = to_vector(X4); 
 
 T = [p1; p2; p3]';
-
-a1 = IW*T + [b1, b1, b1];
-
-net = newhop(a1);
-net.layers{1}.transferFcn = 'poslin';
-
-net.LW{1, 1} = LW;
-net.b{1} = [0; 0; 0];
+net = newhop(T);
 
 display(net);
 view(net);
 
-Ai = IW*T + [b1, b1, b1];
-epochs = 600;
-[Y] = sim(net, 3, [], Ai);
-for i = 1:epochs
-    [Y] = sim(net, 3, [], Y);
-end
-Y = Y(:,1);
+net = init(net);
 
-if not(Y(1) == 0)
-    X = X1;
-else
-    if not(Y(2) == 0)
-        X = X4;
-    else
-        if not(Y(3) == 0)
-            X = X2;
-        else
-            return;
-        end
-    end
-end
+Ai = T;
+Y = sim(net, 3, [], Ai);
+Y = Y(:, 1);
 
-print_image(X, map);
+T1 = to_image(Y, n, m);
+print_image(T1, map);
 
 p = rand(n, m);
+
 nd = 0.2;
-nd1 = 0.3;
+nd1 = 0.3; 
+nd2 = 0.4;
 
 X11 = noise(X1, n, m, p, nd);
 X41 = noise(X4, n, m, p, nd1);
-X21 = noise(X2, n, m, p, nd);
+X21 = noise(X2, n, m, p, nd2);
 
 print_image(X11, map);
 print_image(X41, map);
@@ -126,75 +87,29 @@ p11 = to_vector(X11);
 p21 = to_vector(X41);
 p31 = to_vector(X21);
 
-IW = [p1; p2; p3];
-Ai1 = IW * [p11; p21; p31]' + [b1, b1, b1];
+Ai = [p11; p21; p31]';
 
 epochs = 600;
 
-[D] = sim(net, 3, [], Ai1);
+[Y] = sim(net, 3, [], Ai);
 for i = 1:epochs
-    [D] = sim(net, 3, [], D);
+    [Y] = sim(net, 3, [], Y);
 end
 
-Y1 = D(:,1);
+Y1 = Y(:,1);
 
-if not(Y1(1) == 0)
-    X = X1;
-else
-    if not(Y1(2) == 0)
-        X = X4;
-    else
-        if not(Y1(3) == 0)
-            X = X2;
-        else
-            return;
-        end
-    end
-end
+T1 = to_image(Y1, n, m);
+print_image(T1, map);
 
-print_image(X, map);
+Y4 = Y(:,2);
 
+T4 = to_image(Y4, n, m);
+print_image(T4, map);
 
-Y4 = D(:,2);
+Y2 = Y(:,3);
 
-if not(Y4(1) == 0)
-    X = X1;
-else
-    if not(Y4(2) == 0)
-        X = X4;
-    else
-        if not(Y4(3) == 0)
-            X = X2;
-        else
-            return;
-        end
-    end
-end
-
-print_image(X, map);
-
-
-Y2 = D(:,3);
-
-if not(Y2(1) == 0)
-    X = X1;
-else
-    if not(Y2(2) == 0)
-        X = X4;
-    else
-        if not(Y2(3) == 0)
-            X = X2;
-        else
-            return;
-        end
-    end
-end
-
-print_image(X, map);
-
-
-
-
+T2 = to_image(Y2, n, m);
+print_image(T2, map);
 
 
 
@@ -261,4 +176,3 @@ end
 noisy_image = image;
 
 end
-

@@ -1,5 +1,5 @@
-clear;
 close all;
+clear all;
 
 t = -pi:0.025:pi;
 
@@ -27,45 +27,38 @@ y3 = @(t) (t.^2 / (2*p))*sin(alpha3) + t*cos(alpha3)+y3_0;
 x3 = x3(t);
 y3 = y3(t);
 
-graph = plot(x1, y1, x2, y2, x3, y3);
+% gr = plot(x1, y1, x2, y2, x3, y3);
+% 
+% set(gr(1), 'LineStyle', '-', 'Color', 'r', 'LineWidth', 2);
+% set(gr(2), 'LineStyle', '-', 'Color', 'g', 'LineWidth', 2);
+% set(gr(3), 'LineStyle', '-', 'Color', 'b', 'LineWidth', 2);
 
-set(graph(1), 'Linestyle', '-', 'Color', 'r');
-set(graph(2), 'Linestyle', '-', 'Color', 'g');
-set(graph(3), 'Linestyle', '-', 'Color', 'b');
+k = size(t, 2);
 
-k = size(t,2);
-n1 = 60;
-n2 = 100;
-n3 = 120;
-
-p1 = randperm(k, n1);
-p2 = randperm(k, n2);
-p3 = randperm(k, n3);
+p1 = randperm(k, 60);
+p2 = randperm(k, 100);
+p3 = randperm(k, 120);
 
 X1 = x1(p1);
-Y1 = y1(p1);
-
 X2 = x2(p2);
-Y2 = y2(p2);
-
 X3 = x3(p3);
+
+Y1 = y1(p1);
+Y2 = y2(p2);
 Y3 = y3(p3);
 
-figure;
-graph = plot(x1, y1, x2, y2, x3, y3, X1, Y1, X2, Y2, X3, Y3);
+gr = plot(x1, y1, x2, y2, x3, y3, X1, Y1, X2, Y2, X3, Y3);
 
-set(graph(1), 'Linestyle', '-', 'Color', 'r');
-set(graph(2), 'Linestyle', '-', 'Color', 'g');
-set(graph(3), 'Linestyle', '-', 'Color', 'b');
-set(graph(4), 'LineStyle','none', 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'r', 'MarkerSize', 7);
-set(graph(5), 'LineStyle','none', 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 7);
-set(graph(6), 'LineStyle','none', 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'b', 'MarkerSize', 7);
+% set(gr(1), 'LineStyle', '-', 'Color', 'r', 'LineWidth', 2);
+% set(gr(2), 'LineStyle', '-', 'Color', 'g', 'LineWidth', 2);
+% set(gr(3), 'LineStyle', '-', 'Color', 'b', 'LineWidth', 2);
+% set(gr(4), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
+% set(gr(5), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
+% set(gr(6), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
 
-
-[trainInd1, valInd1, testInd1] = dividerand(n1, 0.8, 0, 0.2);
-[trainInd2, valInd2, testInd2] = dividerand(n2, 0.8, 0, 0.2);
-[trainInd3, valInd3, testInd3] = dividerand(n3, 0.8, 0, 0.2);
-
+[trainInd1, testInd1] = dividerand(60, 0.8, 0.2);
+[trainInd2, testInd2] = dividerand(100, 0.8, 0.2);
+[trainInd3, testInd3] = dividerand(120, 0.8, 0.2);
 
 train1X = X1(trainInd1);
 train1Y = Y1(trainInd1);
@@ -76,295 +69,171 @@ train2Y = Y2(trainInd2);
 train3X = X3(trainInd3);
 train3Y = Y3(trainInd3);
 
-% Эталонные выходы
-for i=1:size(train1X, 2)
-    train1t(i,:) = 1;
-end
+for i = 1:size(train1X,2)
+    train1t(i) = 1;
+end;
+for i = 1:size(train2X,2)
+    train2t(i) = 2;
+end;
 
-for i=1:size(train2X, 2)
-    train2t(i,:) = 2;
-end
+for i = 1:size(train3X,2)
+    train3t(i) = 3;
+end;
 
-for i=1:size(train3X, 2)
-    train3t(i,:) = 3;
-end
+test1X = X1(testInd1);
+test1Y = Y1(testInd1);
 
-% Тестовые множества
-test1X=X1(testInd1);
-test1Y=Y1(testInd1);
+test2X = X2(testInd2);
+test2Y = Y2(testInd2);
 
-test2X=X2(testInd2);
-test2Y=Y2(testInd2);
+test3X = X3(testInd3);
+test3Y = Y3(testInd3);
 
-test3X=X3(testInd3);
-test3Y=Y3(testInd3);
+for i = 1:size(test1X, 2)
+    test1t(i) = 1;
+end;
 
-for i=1:size(test1X, 2)
-    test1t(i,:) = 1;
-end
+for i = 1:size(test2X, 2)
+    test2t(i) = 2;
+end;
 
-for i=1:size(test2X, 2)
-    test2t(i,:) = 2;
-end
-
-for i=1:size(test3X, 2)
-    test3t(i,:) = 3;
-end
-
-figure;
-graph = plot(x1, y1, x2, y2, x3, y3, X1, Y1, X2, Y2, X3, Y3, train1X, train1Y, train2X, train2Y, train3X, train3Y, test1X, test1Y, test2X, test2Y, test3X, test3Y);
-grid;
+for i = 1:size(test3X, 2)
+    test3t(i) = 3;
+end;
 
 axis([-1.2 1.2 -1.2 1.2]);
 
-set(graph(1), 'Linestyle', '-', 'Color', 'r');
-set(graph(2), 'Linestyle', '-', 'Color', 'g');
-set(graph(3), 'Linestyle', '-', 'Color', 'b');
-set(graph(4), 'LineStyle','none', 'Marker', 'o', 'Color', 'r');
-set(graph(5), 'LineStyle','none', 'Marker', 'o', 'Color', 'g');
-set(graph(6), 'LineStyle','none', 'Marker', 'o', 'Color', 'b');
-set(graph(7), 'LineStyle','none', 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'r', 'MarkerSize', 7);
-set(graph(8), 'LineStyle','none', 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 7);
-set(graph(9), 'LineStyle','none', 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'b', 'MarkerSize', 7);
-set(graph(10), 'LineStyle','none', 'Marker', 's', 'Color', 'r', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'r', 'MarkerSize', 7);
-set(graph(11), 'LineStyle','none', 'Marker', 's', 'Color', 'g', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 7);
-set(graph(12), 'LineStyle','none', 'Marker', 's', 'Color', 'b', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'b', 'MarkerSize', 7);
+gr = plot(x1, y1, x2, y2, x3, y3,train1X,train1Y,train2X,train2Y,train3X,train3Y,test1X,test1Y,test2X,test2Y,test3X,test3Y);
+grid;
 
+set(gr(1), 'LineStyle', '-', 'Color', 'r', 'LineWidth', 2);
+set(gr(2), 'LineStyle', '-', 'Color', 'g', 'LineWidth', 2);
+set(gr(3), 'LineStyle', '-', 'Color', 'b', 'LineWidth', 2);
+set(gr(4), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
+set(gr(5), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
+set(gr(6), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'c', 'MarkerSize', 5);
+set(gr(7), 'LineStyle', 'none', 'Marker', 'v','Color', 'r', 'MarkerEdgeColor','k', 'MarkerFaceColor', 'r','MarkerSize',5);
+set(gr(8), 'LineStyle', 'none', 'Marker', 'v','Color', 'g', 'MarkerEdgeColor','k', 'MarkerFaceColor', 'g','MarkerSize',5);
+set(gr(9), 'LineStyle', 'none', 'Marker', 'v','Color', 'b', 'MarkerEdgeColor','k', 'MarkerFaceColor', 'b','MarkerSize',5);
+
+%обучающее
 trainX = [train1X, train2X, train3X];
 trainY = [train1Y, train2Y, train3Y];
-
+%тестовое
 testX = [test1X, test2X, test3X];
 testY = [test1Y, test2Y, test3Y];
-
-traint = [train1t', train2t', train3t'];
-testt = [test1t', test2t', test3t'];
-
-T = ind2vec(traint);
+%выходное 
+traint = [train1t, train2t, train3t];
+testt = [test1t, test2t, test3t];
 
 spread = 0.3;
+%предельное значение критерия обучения 
+goal = 1E-5;
 
-goal = 1e-5;
-
-net = newrb([trainX; trainY], traint, goal, spread);
+net = newrb([trainX;trainY], traint, goal);
 
 display(net);
-view(net);
 
+% view(net);
+%выход, округленные значения к какому классу принадежит точка
 Y = round(sim(net, [trainX; trainY]));
 
-Yc = vec2ind(Y);
-
-Z = abs(Yc - traint);
+Z = abs(Y-traint);
 
 N = size(traint, 2);
 
 p = 0;
 
-for i = 1:N
-    if not(Z(i) == 0)
-        p = p + 1;
-    end
-end
+for i=1:N
+    if not(Z(i)==0)
+        p=p+1;
+    end;
+end;
+% здесь процент
+probtrain = ((N-p)/N)*100
 
-probtrain = ((N- p) / N) * 100;
+Y1 = round(sim(net, [testX; testY]));
 
-Yy = sim(net, [testX; testY]);
-
-Yc1 = vec2ind(Yy);
-
-Z1 = abs(Yc1 - testt);
+Z1 = abs(Y1-testt);
 
 N1 = size(testt, 2);
-p1 = 0;
 
-for i = 1:N1
-    if not(Z1(i) == 0)
-        p1 = p1 + 1;
-    end
-end
+p = 0;
 
-probtest = ((N1 - p1) / N1) * 100;
+for i=1:N1
+    if not(Z1(i)==0)
+        p=p+1;
+    end;
+end;
+% здесь процент
+probtest = ((N1-p)/N1)*100
 
-xs = -1.2:0.025:1.2;
-ys = -1.2:0.025:1.2;
+xs=-1.2:0.025:1.2;
+ys=-1.2:0.025:1.2;
 
-for i = 1:size(xs, 2)
-    for j = 1:size(xs, 2)
-        Xs(i, j) = xs(i);
-        Ys(i, j) = ys(j);
-    end
-end
+for i=1:size(xs,2)
+    for j=1:size(xs,2)
+        Xs(i,j)=xs(i);
+        Ys(i,j)=ys(j);
+    end;
+end;
 
-X = [];
-for i = 1:size(xs, 2)
-    X = [X, Xs(i,:)];
-end
-        
-Y = [];
-for i = 1:size(ys, 2)
-    Y = [Y, Ys(i,:)];
-end
+X=[];
+for i=1:size(xs,2)
+    X=[X,Xs(i,:)];
+end;
 
-Pp = [X; Y];
+Y=[];
+for i=1:size(xs,2)
+    Y=[Y,Ys(i,:)];
+end; 
 
-Zz = sim(net, Pp);
+%Загоняем Х,У во входное множество
+Pp=[X;Y];
 
-Zz = vec2ind(Zz);
+%Прогоняем сеть на множестве всех точек плоскости
+Zz=round(sim(net,Pp));
 
-xa1 = [];
-ya1 = [];
+%формирование первого подмножества
+xa1=[];
+ya1=[];
 
-for i = 1:size(Zz, 2)
-    if Zz(i) == 1
-        xa1 = [xa1, X(i)];
-        ya1 = [ya1, Y(i)];
-    else
-    end
-end
+for i=1:size(Zz,2)
+    if Zz(i)==1
+        xa1=[xa1,X(i)];
+        ya1=[ya1,Y(i)];
+    end;
+end;
 
-xa2 = [];
-ya2 = [];
+%формирование второго подмножества
+xa2=[];
+ya2=[];
 
-for i = 1:size(Zz, 2)
-    if Zz(i) == 2
-        xa2 = [xa2, X(i)];
-        ya2 = [ya2, Y(i)];
-    else
-    end
-end
+for i=1:size(Zz,2)
+    if Zz(i)==2
+        xa2=[xa2,X(i)];
+        ya2=[ya2,Y(i)];
+    end;
+end;
 
-xa3 = [];
-ya3 = [];
+%формирование третьего подмножества
+xa3=[];
+ya3=[];
 
-for i = 1:size(Zz, 2)
-    if Zz(i) == 3
-        xa3 = [xa3, X(i)];
-        ya3 = [ya3, Y(i)];
-    else
-    end
-end
+for i=1:size(Zz,2)
+    if Zz(i)==3
+        xa3=[xa3,X(i)];
+        ya3=[ya3,Y(i)];
+    end;
+end;
 
 figure;
 
-gr2 = plot(xa1, ya1, xa2, ya2, xa3, ya3, x1, y1, x2, y2, x3, y3); grid;
+gr2=plot(xa1,ya1,xa2,ya2,xa3,ya3,x1,y1,x2,y2,x3,y3); grid;
 
-set(gr2(1), 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'r', 'MarkerSize', 7);
-set(gr2(2), 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 7);
-set(gr2(3), 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'b', 'MarkerSize', 7);
-set(gr2(4), 'Linestyle', '-', 'Color', 'k');
-
-
-spread = 0.1;
-
-goal = 1e-5;
-
-net = newrb([trainX; trainY], traint, goal, spread);
-
-display(net);
-view(net);
-
-Y = round(sim(net, [trainX; trainY]));
-
-Yc = vec2ind(Y);
-
-Z = abs(Yc - traint);
-
-N = size(traint, 2);
-
-p = 0;
-
-for i = 1:N
-    if not(Z(i) == 0)
-        p = p + 1;
-    end
-end
-
-probtrain = ((N- p) / N) * 100;
-
-Yy = sim(net, [testX; testY]);
-
-Yc1 = vec2ind(Yy);
-
-Z1 = abs(Yc1 - testt);
-
-N1 = size(testt, 2);
-p1 = 0;
-
-for i = 1:N1
-    if not(Z1(i) == 0)
-        p1 = p1 + 1;
-    end
-end
-
-probtest = ((N1 - p1) / N1) * 100;
-
-
-xs = -1.2:0.025:1.2;
-ys = -1.2:0.025:1.2;
-
-for i = 1:size(xs, 2)
-    for j = 1:size(xs, 2)
-        Xs(i, j) = xs(i);
-        Ys(i, j) = ys(j);
-    end
-end
-
-X = [];
-for i = 1:size(xs, 2)
-    X = [X, Xs(i,:)];
-end
-        
-Y = [];
-for i = 1:size(ys, 2)
-    Y = [Y, Ys(i,:)];
-end
-
-Pp = [X; Y];
-
-Zz = sim(net, Pp);
-
-Zz = vec2ind(Zz);
-
-xa1 = [];
-ya1 = [];
-
-for i = 1:size(Zz, 2)
-    if Zz(i) == 1
-        xa1 = [xa1, X(i)];
-        ya1 = [ya1, Y(i)];
-    else
-    end
-end
-
-xa2 = [];
-ya2 = [];
-
-for i = 1:size(Zz, 2)
-    if Zz(i) == 2
-        xa2 = [xa2, X(i)];
-        ya2 = [ya2, Y(i)];
-    else
-    end
-end
-
-xa3 = [];
-ya3 = [];
-
-for i = 1:size(Zz, 2)
-    if Zz(i) == 3
-        xa3 = [xa3, X(i)];
-        ya3 = [ya3, Y(i)];
-    else
-    end
-end
-
-second_part = figure;
-
-gr3 = plot(xa1, ya1, xa2, ya2, xa3, ya3, x1, y1, x2, y2, x3, y3); grid;
-
-set(gr3(1), 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'r', 'MarkerSize', 7);
-set(gr3(2), 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'g', 'MarkerSize', 7);
-set(gr3(3), 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'b', 'MarkerSize', 7);
-set(gr3(4), 'Linestyle', '-', 'Color', 'k');
-
-uiwait(second_part);
+set(gr2(1), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'r', 'MarkerEdgeColor', 'r', 'MarkerFaceColor', 'r', 'MarkerSize', 5);
+set(gr2(2), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'g', 'MarkerEdgeColor', 'g', 'MarkerFaceColor', 'g', 'MarkerSize', 5);
+set(gr2(3), 'LineStyle', 'none', 'Marker', 'o', 'Color', 'b', 'MarkerEdgeColor', 'b', 'MarkerFaceColor', 'b', 'MarkerSize', 5);
+set(gr2(4), 'LineStyle', '-', 'Color', 'r', 'LineWidth', 2);
+set(gr2(5), 'LineStyle', '-', 'Color', 'g', 'LineWidth', 2);
+set(gr2(6), 'LineStyle', '-', 'Color', 'b', 'LineWidth', 2);

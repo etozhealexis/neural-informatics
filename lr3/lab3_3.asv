@@ -10,18 +10,18 @@ x = x(t);
 graph = plot(t, x); grid;
 
 [trainInd, valInd] = divideind(size(x,2), 1:415, 416:451);
-
+ 
 Trx = t(trainInd);
 Valx = t(valInd);
 
 Try = x(trainInd);
 Valy = x(valInd);
 
-net = feedforwardnet(15);
+net = feedforwardnet(20);
 configure(net, [1, 4.5], [-1, 1]);
 
 net.layers{2}.transferFcn = 'tansig';
-net.trainFcn = 'traincgf';
+net.trainFcn = 'trainlm';
 net.divideFcn = 'divideind';
 
 net.divideParam.trainInd = 1:size(Trx, 2);
@@ -47,7 +47,7 @@ plotperf(tr);
 xr = sim(net, Trx);
 xv = sim(net, Valx);
 
-second_part = figure;
+third_part = figure;
 graph = plot(t, x, Trx, xr, Valx, xv); grid;
 
-uiwait(second_part);
+uiwait(third_part);

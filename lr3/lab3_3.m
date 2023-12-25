@@ -9,15 +9,15 @@ x = x(t);
 
 graph = plot(t, x); grid;
 
-[trainInd, valInd] = divideind(size(x,2), 1:276, 277:5501);
-
+[trainInd, valInd] = divideind(size(x,2), 1:415, 416:451);
+   
 Trx = t(trainInd);
 Valx = t(valInd);
 
 Try = x(trainInd);
 Valy = x(valInd);
 
-net = feedforwardnet(40);
+net = feedforwardnet(20);
 configure(net, [1, 4.5], [-1, 1]);
 
 net.layers{2}.transferFcn = 'tansig';
@@ -33,7 +33,7 @@ view(net);
 
 init(net);
 
-net.trainParam.epochs = 500;
+net.trainParam.epochs = 600;
 net.trainParam.max_fail = 600;
 net.trainParam.goal = 1e-8;
 
